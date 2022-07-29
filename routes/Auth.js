@@ -41,7 +41,6 @@ router.post("/signin",async (req,res)=>{
     }
     
     const regUser = await userData.findOne({email: email}); 
-
     if(!regUser){
         return res.status(404).json({error: "user doesn't exist"})
     }

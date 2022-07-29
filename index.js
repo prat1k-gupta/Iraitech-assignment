@@ -2,7 +2,9 @@ const express = require("express");
 const connectDB = require("./connectDB");
 const Authenticate = require("./middlewares/Authenticate")
 const cookieParser = require("cookie-parser")
-const user = require("./models/userSchema")
+const bcrypt = require("bcryptjs")
+const user = require("./models/userSchema");
+const { findOneAndUpdate } = require("./models/userSchema");
 require("dotenv").config(); 
 
 const app = express(); 
@@ -20,7 +22,18 @@ app.get("/list",async (req,res)=>{
     res.json(allUsers)
 })
 
-app.post("/user/profile",Authenticate,async (req,res)=>{
+app.put("/user/profile",Authenticate,async (req,res)=>{
+    const currentPassword = req.rootUser.password
+    const {name,email,password,cpassword,pic} = req.body
+    const isCorrect = await bcrypt.compare(password,currentPassword);
+    if(!isCorrect){
+        return res.status(422).json({error: "please enter the correct current password"})
+    }
+    if(password!=cpassword){
+        return res.status(404).json("confirm password is not same as password")
+    }
+    const User = await user.findOneAndUpdate({_id: req.userID},{name,email,password,cpassword,pic},{new: true})
+    res.json(User)
 
 })
 connectDB();
