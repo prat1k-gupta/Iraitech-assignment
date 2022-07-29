@@ -23,17 +23,24 @@ app.get("/list",async (req,res)=>{
 })
 
 app.put("/user/profile",Authenticate,async (req,res)=>{
-    const currentPassword = req.rootUser.password
     const {name,email,password,cpassword,pic} = req.body
-    const isCorrect = await bcrypt.compare(password,currentPassword);
-    if(!isCorrect){
-        return res.status(422).json({error: "please enter the correct current password"})
-    }
+    
     if(password!=cpassword){
         return res.status(404).json("confirm password is not same as password")
     }
-    const User = await user.findOneAndUpdate({_id: req.userID},{name,email,password,cpassword,pic},{new: true})
-    res.json(User)
+    const User = await user.findOne({_id: req.userID})
+    if(User){
+        User.name = name || User.name
+        User.email = email || User.email
+        User.pic = pic || User.pic; 
+    }
+    if(password){
+        User.password = password
+        User.cpassword = cpassword
+    }
+    const updateUser = await User.save(); 
+
+    res.json(updateUser)
 
 })
 connectDB();
