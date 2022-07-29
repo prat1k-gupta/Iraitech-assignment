@@ -11,7 +11,7 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(require("./routes/Auth"))
 
-app.get("/userprofile",Authenticate,(req,res)=>{
+app.get("/user",Authenticate,(req,res)=>{
     res.json(req.rootUser)
 })
 
@@ -20,6 +20,9 @@ app.get("/list",async (req,res)=>{
     res.json(allUsers)
 })
 
+app.post("/user/profile",Authenticate,async (req,res)=>{
+
+})
 connectDB();
 app.listen(PORT,(req,res)=>{
     console.log("server is running!!")

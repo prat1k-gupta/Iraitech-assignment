@@ -8,7 +8,7 @@ const jwt = require("jsonwebtoken")
 
 //signup
 router.post('/signup',async (req,res)=>{
-    const {name,email,password,cpassword} = req.body; 
+    const {name,email,password,cpassword,pic} = req.body; 
     if(!name||!email||!password||!cpassword){
         return res.status(422).json({error: "please enter the required field"})
     }
@@ -19,7 +19,7 @@ router.post('/signup',async (req,res)=>{
     if(userExist){
         return res.status(422).json({error: "user already exist"})
     }
-    const User = new userData({name,email,password,cpassword});
+    const User = new userData({name,email,password,cpassword,pic});
     try{
         const saveUser = await User.save();
         if(saveUser){
