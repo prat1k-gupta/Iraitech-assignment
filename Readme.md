@@ -16,6 +16,12 @@ Using Command Line
 
 ```
 echo >> .env
+
+ADD: 
+
+PORT = 
+DB_URL = 
+SECRET_KEY = 
 ```
 
 ## Run backend on localhost
